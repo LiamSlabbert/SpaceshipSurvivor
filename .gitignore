@@ -1,0 +1,30 @@
+# Build folders
+bin/
+obj/
+Content/bin/
+Content/obj/
+
+# MonoGame content pipeline
+*.mgcb.bin
+*.mgcontent
+
+# User / IDE files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+
+# Logs / cache / debug
+*.log
+*.cache
+*.pdb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Binaries
+*.exe
+*.dll
