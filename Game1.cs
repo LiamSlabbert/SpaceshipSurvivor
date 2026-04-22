@@ -17,7 +17,8 @@ namespace SpaceshipSurvivor
         SpriteFont timerFont;
 
         Ship player = new Ship();
-        Asteroid testAsteroid = new Asteroid(220);
+        Controller gameController = new Controller();
+        
 
         public Game1()
         {
@@ -53,7 +54,12 @@ namespace SpaceshipSurvivor
                 Exit();
 
             player.ShipUpdate(gameTime);
-            testAsteroid.AsteroidUpdate(gameTime);
+            gameController.ConUpdate(gameTime);
+
+            for (int i = 0; i < gameController.asteroids.Count; i++)
+            {
+                gameController.asteroids[i].AsteroidUpdate(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -65,7 +71,11 @@ namespace SpaceshipSurvivor
             _spriteBatch.Begin();
             _spriteBatch.Draw(spaceSprite, new Vector2(0, 0), Color.White);
             _spriteBatch.Draw(shipSprite, new Vector2(player.position.X - 34, player.position.Y - 50), Color.White);
-            _spriteBatch.Draw(asteroidSprite, new Vector2(testAsteroid.position.X - testAsteroid.radius, testAsteroid.position.Y - testAsteroid.radius), Color.White);
+            for (int i = 0; i < gameController.asteroids.Count; i++)
+            {
+                Asteroid currentAsteroid = gameController.asteroids[i];
+                _spriteBatch.Draw(asteroidSprite, new Vector2(currentAsteroid.position.X - currentAsteroid.radius, currentAsteroid.position.Y - currentAsteroid.radius), Color.White);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
