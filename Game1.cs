@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace SpaceshipSurvivor
 {
@@ -53,12 +54,25 @@ namespace SpaceshipSurvivor
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.ShipUpdate(gameTime);
+            if(gameController.inGame)
+            {
+                player.ShipUpdate(gameTime);
+            }
+
             gameController.ConUpdate(gameTime);
 
             for (int i = 0; i < gameController.asteroids.Count; i++)
             {
                 gameController.asteroids[i].AsteroidUpdate(gameTime);
+
+                int sum = gameController.asteroids[i].radius + player.radius;
+
+                if (Vector2.Distance(gameController.asteroids[i].position, player.position) < sum)
+                {
+                    gameController.inGame = false;
+                    player.position = Ship.defaultPosition;
+                    gameController.asteroids.Clear();
+                }
             }
 
             base.Update(gameTime);
@@ -76,6 +90,18 @@ namespace SpaceshipSurvivor
                 Asteroid currentAsteroid = gameController.asteroids[i];
                 _spriteBatch.Draw(asteroidSprite, new Vector2(currentAsteroid.position.X - currentAsteroid.radius, currentAsteroid.position.Y - currentAsteroid.radius), Color.White);
             }
+
+            if(!gameController.inGame)
+            {
+                string menuMessage = "Press Enter To Begin!";
+                Vector2 sizeOfText = gameFont.MeasureString(menuMessage);
+                int halfWidth = _graphics.PreferredBackBufferWidth / 2;
+
+                _spriteBatch.DrawString(gameFont, menuMessage, new Vector2(halfWidth - (sizeOfText.X / 2), 200), Color.White);
+            }
+
+            _spriteBatch.DrawString(timerFont, "Score: " + Math.Floor(gameController.totalTime).ToString(), new Vector2(3, 3), Color.White);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
